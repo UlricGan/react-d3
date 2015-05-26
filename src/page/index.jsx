@@ -22,6 +22,19 @@ export default class Index extends React.Component {
 		}
 	}
 
+	renderTooltip(intervalData, translateCoords) {
+		let style = {
+			transform: `translate3d(calc(${translateCoords.x}px + 25%), ${translateCoords.y}px, 0)`
+		}
+
+		return (
+			<div className='chart-tooltip' style={style}>
+				<h4>{intervalData.letter}</h4>
+				<p>data: {intervalData.frequency}</p>
+			</div>
+		)
+	}
+
 	_clickHanlder() {
 		this.setState({
 			data: this.state.data.slice(2)
@@ -31,7 +44,8 @@ export default class Index extends React.Component {
 	render() {
 		let options = {
 			height: 500,
-			width: 960
+			width: 960,
+			tooltip: this.renderTooltip
 		}
 		return (
 			<div>

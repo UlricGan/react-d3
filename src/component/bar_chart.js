@@ -1,4 +1,5 @@
 import d3 from 'd3'
+import React from 'react'
 
 export default class BarChart {
 	update(data) {
@@ -20,10 +21,6 @@ export default class BarChart {
 		let bar = this.svg.selectAll('.bar')
 				.data(data)
 
-		bar.attr('x', d => x(d.letter))
-			.attr('width', x.rangeBand())
-			.attr('y', d => y(d.frequency))
-			.attr('height', d => (this.height - y(d.frequency)))
 
 		bar.enter().append('rect')
 			.attr('class', 'bar')
@@ -32,6 +29,37 @@ export default class BarChart {
 			.attr('y', d => y(d.frequency))
 			.attr('height', d => (this.height - y(d.frequency)))
 
-		bar.exit().remove()
+		bar.transition()
+			.attr('x', d => x(d.letter))
+			.attr('width', x.rangeBand())
+			.attr('y', d => y(d.frequency))
+			.attr('height', d => (this.height - y(d.frequency)))
+
+		bar.exit().transition().remove()
+	}
+
+	_addListeners() {
+		if (this.options.tooltip) {
+			this.svg.on('mouseover', _.partial(this._onMouseOver, this.options))
+			this.svg.on('mouseout', _.partial(this._onMouseOut))
+		}
+	}
+
+	_onMouseOver(options) {
+		this.tooltipNode = this.parentNode.parentNode.children[0]
+
+		if (d3.select(d3.event.target).classed('bar')) {
+			let barGroup = d3.event.target
+			let intervalData = barGroup.__data__
+			let x = d3.select(d3.event.target).attr('x')
+			let y = d3.select(d3.event.target).attr('y')
+			React.render(options.tooltip(intervalData, {x: x, y: y-70}), this.tooltipNode)
+		}
+	}
+
+	_onMouseOut() {
+		if (d3.select(d3.event.target).classed('bar')) {
+			React.unmountComponentAtNode(this.tooltipNode)
+		}
 	}
 }

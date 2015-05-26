@@ -51,6 +51,9 @@ ChartFactory.prototype.initialize = function(data, node, opts) {
 			.attr('transform', 'rotate(-90)')
 
 	this.update(data)
+	if (typeof this._addListeners == 'function') {
+		this._addListeners();
+	}
 }
 
 ChartFactory.BarChart = BarChart
