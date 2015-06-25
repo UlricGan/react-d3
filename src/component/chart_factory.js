@@ -2,6 +2,7 @@ import _ from 'lodash'
 import d3 from 'd3'
 
 import BarChart from './bar_chart'
+import MultiLineChart from './multiLineChart'
 
 export default function ChartFactory(type, data, node, options) {
 
@@ -26,7 +27,7 @@ ChartFactory.prototype.initialize = function(data, node, opts) {
 			top: 20,
 			right: 20,
 			bottom: 30,
-			left: 40
+			left: 60
 		}
 	}
 	let options = this.options = _.defaults(opts || {}, defaults)
@@ -57,5 +58,5 @@ ChartFactory.prototype.initialize = function(data, node, opts) {
 }
 
 ChartFactory.BarChart = BarChart
-
+ChartFactory.MultiLineChart = MultiLineChart
 

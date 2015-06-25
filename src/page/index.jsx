@@ -1,4 +1,6 @@
 import React from 'react'
+import d3 from 'd3'
+import _ from 'lodash'
 
 import Chart from '../component/Chart'
 
@@ -18,7 +20,9 @@ export default class Index extends React.Component {
 				{letter: 'I', frequency: 0.06966},
 				{letter: 'J', frequency: 0.00153},
 				{letter: 'K', frequency: 0.02358}
-			]
+			],
+
+			multiLineChartData: this.props.lineData
 		}
 	}
 
@@ -55,7 +59,40 @@ export default class Index extends React.Component {
 					data = {this.state.data}
 					options = {options}
 				/>
+				<label>
+					<input type='checkbox' onChange={e=> {
+						if (e.target.checked) {
+							this.setState({
+								multiLineChartData: this.props.lineData.slice(-7)
+							})
+						} else {
+							this.setState({
+								multiLineChartData: this.props.lineData
+							})
+						}
+						}}/>GO!
+				</label>
+				<Chart
+					type='MultiLineChart'
+					data={this.state.multiLineChartData}
+					options = {options}
+				/>
 			</div>
 		)
 	}
 }
+
+let parseDate = d3.time.format('%Y%m%d').parse
+let timeRange = [20150601,20150602,20150603,20150604,20150605,20150606,20150607,20150608,20150609,20150610,20150611,20150612,20150613,20150614,20150615,20150616,20150617,20150618,20150619,20150620,20150621,20150622,20150623,20150624,20150625,20150626,20150627,20150628,20150629,20150630]
+let lineData = timeRange.map(time => {
+	let key = time
+	let values = {
+		exposure: _.random(8000, 15000),
+		browse: _.random(1500, 3000),
+		contact: _.random(500, 1000),
+		date: parseDate(time.toString())
+	}
+	return {key, values}
+})
+
+Index.defaultProps = {lineData: lineData}

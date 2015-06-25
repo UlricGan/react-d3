@@ -23,6 +23,14 @@ app.get('/app.js', function(req, res) {
   }
 });
 
+app.get('/style.css', function(req, res) {
+  if (process.env.PRODUCTION) {
+    res.sendFile(__dirname + '/build/style.css');
+  } else {
+    res.redirect('//localhost:9090/build/style.css');
+  }
+});
+
 // Serve index page
 app.get('*', function(req, res) {
   res.sendFile(__dirname + '/build/index.html');
